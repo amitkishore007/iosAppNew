@@ -1,7 +1,7 @@
 <section class="wrapper">
         <div class="dashboard">
             <div class="title-row">
-                <a href="add_client.php" class="button fancy title-btn primary">Add new Admin</a>
+                <!-- <a href="add_client.php" class="button fancy title-btn primary">Add new Admin</a> -->
                 <h1 class="title">Users</h1>
             </div>
             <div class="dashboard">

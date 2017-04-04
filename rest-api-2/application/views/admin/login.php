@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#ffffff">
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <?php echo link_tag('assets/css/styles.css?v=1.6'); ?>
+    <?php echo link_tag('assets/css/styles.css?v=1.7'); ?>
     <?php echo link_tag('assets/css/zebra_pagination.css'); ?>
     <script>
         var base_url = "<?php echo base_url(); ?>";
@@ -67,7 +67,7 @@
               
                 </div>
                 <div class="action">
-                <?php echo form_submit('submit','Login'); ?> 
+                <?php echo form_submit('submit','Login',array('id'=>'login')); ?> 
                     <!-- <input type="submit" value="Login" id='adminLogin'/> -->
                     <!-- <a href="javascript:void(0);" class="forgot-password-link">Forgot Password?</a> -->
                     <div style="clear:both;"></div>
@@ -79,7 +79,7 @@
         <?php echo form_close(); ?>
     </div>
     <div class="forgot-password">
-        <form action="" method="post" onsubmit="#" name="forgot_pass_form">
+        <form action="" method="post"  name="forgot_pass_form">
             <fieldset>
                 <div class="logo">
                     <a href="#"><img src="#" /> Marathon Forever</a>
@@ -99,6 +99,7 @@
                 </div>
             </fieldset>
         </form>
+
     </div>
     </body>
 

@@ -34,6 +34,7 @@ class AdminModel extends CI_Model
 				$data = array(
 					'admin_id'=>$admin->id,
 					'admin_email'=>$admin->email,
+					'role'=>$admin->role,
 					'is_logged_in'=>true
 					);
 				$this->session->set_userdata($data);

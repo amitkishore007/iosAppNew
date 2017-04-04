@@ -1,14 +1,14 @@
 $(document).ready(function(){
 
 
-	$('input[type="submit"]').click(function(){
+	$('#login').click(function(){
 			
 		var email = $('input[name="email"]').val();
 		var password = $('input[name="password"]').val();
 
 		$.ajax({
 
-			url:base_url+"admin/login",
+			url:base_url+"login/login",
 			type:'post',
 			data:{submit:'submit',email:email,password:password},
 			beforeSend:function() {
@@ -39,4 +39,35 @@ $(document).ready(function(){
 	});
 
 
+
+
 });
+
+
+function send_notification() {
+
+
+	$.ajax({
+
+		url:base_url+"auth/send_notification",
+		
+		type:'post',
+		
+		data:{},
+		
+		beforeSend : function(){
+			console.log('notification send !');
+		},
+
+		success: function(html) {
+
+			console.log(html);
+		},
+
+	});
+
+
+
+}
+
+//setInterval(send_notification,1000);

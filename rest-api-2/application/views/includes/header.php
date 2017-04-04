@@ -9,7 +9,7 @@
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
    <?php echo link_tag('assets/css/styles.css?v=1.6'); ?>
-    <?php echo link_tag('assets/css/zebra_pagination.css'); ?>
+   <?php echo link_tag('assets/css/zebra_pagination.css'); ?>
 
    <script>
         var base_url = "<?php echo base_url(); ?>";
@@ -28,7 +28,12 @@
         </div>
         <nav id="nav">
             <ul class="menu">
-                <li><span>Welcome Super Admin</span>
+            <?php if ($this->session->userdata('is_logged_in')) { ?>
+               
+                <li><span>welcome <?php echo $this->session->userdata('role'); ?></span>
+                
+                 <?php } ?>
+            
                 </li>
                 <!-- <li ><a href="/view_events.php">Events</a></li> -->
                 <li class="Selected"><a href="client_list.php">Users</a>

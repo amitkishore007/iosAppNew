@@ -27,9 +27,6 @@ class Auth extends REST_Controller
 
         $id =  $this->uri->segment(3);
 
-        
-        
-
         // If the id parameter doesn't exist return all the users
 
         if ($id === NULL)
@@ -87,7 +84,7 @@ class Auth extends REST_Controller
 	public function login_post() {
 
 		if ($this->input->post('email')) {
-		
+
 			 if($user = $this->userModel->check_login($this->input->post())) {
 
 			 	$this->set_response($user,REST_Controller::HTTP_OK);
@@ -142,6 +139,74 @@ class Auth extends REST_Controller
     public function index_get() {
         echo 'Access denied no direct access';
     }
+
+    public function distance_post() {
+
+         if ($this->input->post('distance')) {
+            
+            $status = $this->userModel->put_distance($this->input->post());
+            
+            if($status['status']) {
+
+                $this->set_response($status,REST_Controller::HTTP_OK);
+
+
+            } else {
+
+                $this->set_response($status,REST_Controller::HTTP_NOT_FOUND);
+            }
+
+        } else {
+
+            $this->set_response([
+                    'status' => FALSE,
+                    'message' => 'Access denied'
+                ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+        }
+
+    }
+
+    // public function send_notification_get() {
+
+    //     $users = $this->userModel->get_all_users_notification();
+
+    //     if (count($users)) {
+            
+    //         foreach ($users as $user) {
+                
+
+    //         }
+    //     }
+
+    // }
+
+
+    public function invite_post(){
+
+
+        if ($this->input->post('invite')) {
+                
+            $status = $this->userModel->send_invite_mail($this->input->post());
+            
+            if ($status['status']) {
+                    
+                $this->set_response($status,REST_Controller::HTTP_OK);
+
+            } else {
+
+                $this->set_response($status,REST_Controller::HTTP_NOT_FOUND);
+
+            }
+
+        } else {
+
+                $this->set_response(FALSE,REST_Controller::HTTP_NOT_ACCEPTABLE);
+
+        }
+
+    }
+
+
 
 	
 }
