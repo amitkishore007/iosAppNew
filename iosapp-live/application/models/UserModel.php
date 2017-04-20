@@ -4,6 +4,8 @@
 /**
 * handle all the users requests
 */
+
+// twilio sms api library 
 class UserModel extends CI_Model
 {
 	
@@ -11,14 +13,14 @@ class UserModel extends CI_Model
 
 			//TODO: find all the users ranking.
 						
-			$donations =  $this->db->query('SELECT donations.id as donation_id, SUM(points) as total_points, donations.badge,donations.distance, users.fname,users.lname, users.id ,users.email,users.phone, users.image, users.dob, users.gender  FROM users LEFT OUTER JOIN donations ON users.id = donations.user_id GROUP BY users.id  order by total_points desc')->result();
+			$donations =  $this->db->query('SELECT donations.id as donation_id, SUM(points) as total_points, donations.badge,donations.distance, users.fname,users.lname, users.id ,users.email,users.phone, users.image, users.dob, users.gender  FROM users LEFT OUTER JOIN donations ON users.id = donations.user_id GROUP BY users.id  order by total_points desc, users.fname ASC')->result();
 
 			// return $donations;
         	
-        	$rank  = 1;
+        	$rank  = 0;
         	$users = array();
         	//return $donations;
-        	
+        	$last_points = false;
         	foreach ($donations as $donation ) {
 				$user = array();	
 				
@@ -33,25 +35,21 @@ class UserModel extends CI_Model
 				$user['badge']        = $this->set_badge($donation->distance);
 				$user['dob']          = $donation->dob;
 				$user['gender']       = $donation->gender;
-				$user['rank']         = $rank;
+			
+				  if ($last_points!=$donation->total_points) {
+				  	# code...
+				  	$last_points = $donation->total_points;
+					$rank++;
+				  }
+				 
+				  $user['rank']         = $rank;
 
-				
-				  $rank++;
-				
-				$users[] = $user;
+				  $users[] = $user;
         	}
 
         	return $users;
 
-            // for same rank arrange them according to the asc order of alphabet of their first name
-
-
-			// TODO: for a perticulay point assign them a bedge
-
-			// output the users with the badge
-
 		}
-
 
 		public function set_badge($distance) {
 
@@ -70,16 +68,41 @@ class UserModel extends CI_Model
 				case 42: $badge =  base_url('assets/badge/42.png'); break;
 				
 				default: $badge = ''; break;
+		
 			}
+
 			return $badge;
 
 		}
 
-		public function get_user_by_id($id) 
-		{
-			 return $this->db->where(['id'=>$id])->get('users')->result();
-			//echo $id;
+		public function get_user_by_id($id) {
+
+			$users = $this->get_users();
+			$user  = $this->find_key_value($users,'id', $id);
+
+			if (!empty($user)) {
+				
+				return array($user);
+			
+			} else {
+				
+				return $user;
+			}
+			
 		}
+
+		private function find_key_value($array, $key, $val) {
+
+		    foreach ($array as $item) {
+
+		        if (is_array($item) && $this->find_key_value($item, $key, $val)) return $item;
+
+		        if (isset($item[$key]) && $item[$key] == $val) return $item;
+		    }
+
+		    return false;
+		}
+
 
 		public function check_login($info) {
 
@@ -143,7 +166,15 @@ class UserModel extends CI_Model
 
 			if ($this->form_validation->run('register_form_validation')==TRUE) {
 			 
+				   $image = 'paceholder.png';
+
+				if (!empty($_FILES['image']['name'])) {
+
+					$image = $this->upload_image();
+				}
+
 			$info['password'] = md5($info['password']);	
+			$info['image']    = base_url().'uploads/'.$image;	
 			
 			$this->db->insert('users',$info);
 			if($this->db->affected_rows()==1) {
@@ -184,6 +215,36 @@ class UserModel extends CI_Model
 
 			}
 		}
+
+		private function upload_image() {
+          
+			$config['upload_path']   = './uploads';
+			$config['allowed_types'] = 'gif|jpg|png';
+			$config['encrypt_name']  = TRUE;
+			$config['remove_spaces'] = TRUE;
+
+            $this->load->library('upload', $config);
+
+            if ($this->upload->do_upload('image')) {
+
+                $data = $this->upload->data();
+
+				$config['image_library']  = 'gd2';
+				$config['source_image']   = './uploads/'.$data['file_name'];
+				$config['new_image']      = './uploads/';
+				$config['maintain_ratio'] = TRUE;
+				$config['width']          = 200;
+				$config['height']         = 200;
+				$config['overwrite']      = TRUE;
+				
+				$this->load->library('image_lib', $config); 
+				if (!$this->image_lib->resize()) {
+				    return $this->set_message(FALSE,'There was en error with image uploading, try later!');
+				}
+
+				return $data['file_name'];
+            }
+	}
 
 		
 		public function put_donation($info) {
@@ -325,8 +386,10 @@ class UserModel extends CI_Model
 				$data = array('fb_id'=>$info['fb_id']);
 
 				// check if user exists 
-				if ($user = $this->find_user_by_field($data)) {//if exists then find user by fb_if and login
-											
+				if ($user = $this->find_user_by_field($data)) { //if exists then find user by fb_if and login
+						
+						$this->db->set(['image'=>$info['image']])->where(['fb_id'=>$user->fb_id])->update('users');					
+						
 						$message = array(
 							"id"         => $user->id,
 							"fname"      => $user->fname,
@@ -336,35 +399,44 @@ class UserModel extends CI_Model
 							"phone"      => $user->phone,
 							"g_id"       => $user->g_id,
 							"fb_id"      => $user->fb_id,
-							"image"      => $user->image,
-							"created_at" => $user->created_at
+							"image"      => $info['image'],
+							"created_at" => $user->created_at,
+							'is_logged_in'=> 'true'
 						);
 					   return $this->set_message(TRUE, $message);
 
 				} else { 	//else register
  				
- 				 	if ($this->insertFacebookGoogle($info)) {
-						
-						$user = $this->find_user_by_field(['fb_id'=>$info['fb_id']]);
+ 					if (!$this->find_user_by_field(['email'=>$info['email']])) {
+ 						
+ 					
+	 				 	if ($this->insertFacebookGoogle($info)) {
+							
+							$user = $this->find_user_by_field(['fb_id'=>$info['fb_id']]);
 
-						$message = array(
-							"id"         => $user->id,
-							"fname"      => $user->fname,
-							"lname"      => $user->lname,
-							"email"      => $user->email,
-							"password"   => $user->password,
-							"phone"      => $user->phone,
-							"g_id"       => $user->g_id,
-							"fb_id"      => $user->fb_id,
-							"image"      => $user->image,
-							"created_at" => $user->created_at
-						);
-					   return $this->set_message(TRUE, $message);
+							$message = array(
+								"id"           => $user->id,
+								"fname"        => $user->fname,
+								"lname"        => $user->lname,
+								"email"        => $user->email,
+								// "password"  => $user->password,
+								"phone"        => $user->phone,
+								"g_id"         => $user->g_id,
+								"fb_id"        => $user->fb_id,
+								"image"        => $user->image,
+								"created_at"   => $user->created_at,
+								'is_logged_in' => 'false'
+							);
+						   return $this->set_message(TRUE, $message);
 
+						} else {
+
+							 return $this->set_message(FALSE, 'There was an error, please choose other login method');
+
+						}
 					} else {
 
-						 return $this->set_message(FALSE, 'There was an error, please choose other login method');
-
+						return $this->set_message(FALSE, 'Email is already registered, please login ');
 					}
 					
 				}
@@ -374,6 +446,8 @@ class UserModel extends CI_Model
 			 	$data = array('g_id'=>$info['g_id']);
 				// check if user exists 
 				if ($user = $this->find_user_by_field($data)) {//if exists then find user by fb_if and login
+
+					$this->db->set(['image'=>$info['image']])->where(['g_id'=>$user->g_id])->update('users');	
 											
 						$message = array(
 							"id"         => $user->id,
@@ -384,8 +458,9 @@ class UserModel extends CI_Model
 							"phone"      => $user->phone,
 							"g_id"       => $user->g_id,
 							"fb_id"      => $user->fb_id,
-							"image"      => $user->image,
-							"created_at" => $user->created_at
+							"image"      => $info['image'],
+							"created_at" => $user->created_at,
+							'is_logged_in'=> 'true'
 						);
 					   return $this->set_message(TRUE, $message);
 
@@ -405,7 +480,8 @@ class UserModel extends CI_Model
 							"g_id"       => $user->g_id,
 							"fb_id"      => $user->fb_id,
 							"image"      => $user->image,
-							"created_at" => $user->created_at
+							"created_at" => $user->created_at,
+							'is_logged_in'=> 'false'
 						);
 					   return $this->set_message(TRUE, $message);
 
@@ -431,6 +507,13 @@ class UserModel extends CI_Model
 			$user_id = (int) $info['user_id'];
 
 			$user = $this->find_user_by_field(['id'=>$user_id]);
+
+			$image = $user->image;
+
+			if (!empty($_FILES['image']['name'])) {
+
+				$image = $this->upload_image();
+			}
 			
 			if ($user) {
 				
@@ -455,13 +538,16 @@ class UserModel extends CI_Model
 				} else {
 					
 					$data = array(
+
 						'fname'  =>$info['fname'],
 						'lname'  =>$info['lname'],
 						'email'  =>$info['email'],
 						'dob'    =>$info['dob'],
 						'gender' =>$info['gender'],
 						'phone'  =>$info['phone'],
-
+						
+						'image'  =>$image,
+						
 						);
 
 					$this->db->set($data)->where(['id'=>$user_id])->update('users');
@@ -486,6 +572,7 @@ class UserModel extends CI_Model
 
 		}
 
+		
 
 }
 

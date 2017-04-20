@@ -4,8 +4,8 @@
 
 	"default": {
 
-		"host": "ftp.theideademocracy.com",
-		"username": "built@theideademocracy.com",  // or null for anonymous login
+		"host": "ftp.theideademocracy.com$",
+		"username": "built@theideademocracy.com$",  // or null for anonymous login
 		"password": "builtFTP20!7",
 		"path": "/www/iosapp",
 

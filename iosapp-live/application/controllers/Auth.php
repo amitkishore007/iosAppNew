@@ -5,6 +5,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // This can be removed if you use __autoload() in config.php OR use Modular Extensions
 /** @noinspection PhpIncludeInspection */
 require APPPATH . '/libraries/REST_Controller.php';
+// require APPPATH.'libraries'.DIRECTORY_SEPARATOR.'twilio-php-master'.DIRECTORY_SEPARATOR.'Twilio'.DIRECTORY_SEPARATOR.'autoload.php';
+
 
 // use namespace
 use Restserver\Libraries\REST_Controller;
@@ -13,7 +15,7 @@ class Auth extends REST_Controller
 {
 	 function __construct()
     {
-        // Construct the parent class
+     
         parent::__construct();
         $this->load->model('userModel');
 
@@ -40,6 +42,7 @@ class Auth extends REST_Controller
                 // Set the response and exit
                 //$this->response($users, REST_Controller::HTTP_OK); // OK (200) being the HTTP response code
                 return $this->response($users);
+                
             }
             else
             {
@@ -115,7 +118,7 @@ class Auth extends REST_Controller
 
     public function register_post() {
 
-
+        
         if ($this->input->post('submit')) {
             
            unset($_POST['submit']);
@@ -137,7 +140,8 @@ class Auth extends REST_Controller
             $this->set_response([
                     'status' => FALSE,
                     'message' => 'Access denied'
-                ], REST_Controller::HTTP_NOT_FOUND); // NOT_FOUND (404) being the HTTP response code
+                ], REST_Controller::HTTP_NOT_FOUND); 
+                // NOT_FOUND (404) being the HTTP response code
         }
 
     }
