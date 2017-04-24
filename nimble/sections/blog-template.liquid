@@ -1,0 +1,205 @@
+<div class="blog-banner" style="background-image: url({{ settings.blog_banner | img_url: '1400x350' }});"></div>
+{% paginate blog.articles by 9 %}
+<div class="filter-wrapper">
+	<div class="page-width">
+		<h1 class="page-title">{{ page_title }}</h1>
+		{% if blog.tags.size > 0 %}
+		  <div id="BlogTagFilter">
+			<ul class="filter-button-group">
+				 <li data-filter=".all" class="current">all</li>
+				{% for tag in blog.all_tags %}
+				  <li data-filter=".{{ tag | handleize }}" class="{% if current_tags contains tag %}current{% endif %}">{{ tag }}</li>
+				{% endfor %}
+			</ul>
+		  </div>
+		{% endif %}
+	</div>
+</div>
+<div class="{% if settings.layout == 'list' %}blog--list-view{% endif %}">
+  {% if settings.layout == 'grid' %}
+    <div class="page-width">
+      <div class="row clearfix grid-isotope">
+        {% for article in blog.articles %}
+          <div class="col col-four item {% for tag in article.tags %} {{ tag | handle }} {% endfor %} all">
+            {% if article.image %}
+              <a href="{{ article.url }}" class="article__grid-image">
+                {{ article | img_url: '315x315', crop:'center' | img_tag: article.title }}
+              </a>
+            {% endif %}
+
+            <div class="{% if article.image %} article__grid-meta--has-image{% endif %}">
+              <h5 class="article__title desktop-blog-name" >
+                <a href="{{ article.url }}">{{ article.title }}</a>
+              </h5>
+			   <h5 class="article__title mobile-blog-name">
+                <a href="{{ article.url }}">{{ article.title | strip_html | truncate: 15, "..."}}</a>
+              </h5>
+
+              {% if settings.blog_show_author %}
+                <span class="article__author">{{ 'blogs.article.by_author' | t: author: article.author }}</span>
+              {% endif %}
+
+              {% if settings.blog_show_date %}
+                <span class="article__date">
+                  {{ article.published_at | time_tag: format: 'month_day_year' }}
+                </span>
+              {% endif %}
+
+              <div class="rte article__grid-excerpt">
+                {% if article.excerpt.size > 0 %}
+                  {{ article.excerpt | strip_html | truncate: 65, " "}}
+                {% else %}
+                  {{ article.content | strip_html | truncate: 65, " " }}
+                {% endif %}
+              </div>
+			 {% comment %}
+              {% if article.tags.size > 0 %}
+                <div class="article__tags rte">
+                  {% for tag in article.tags %}
+                    <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article__grid-tag">{{ tag }}</a>
+                  {% endfor %}
+                </div>
+              {% endif %}
+			{% endcomment %}
+              <ul class="list--inline">
+                <li>
+                  <a href="{{ article.url }}" class="btn btn--secondary btn--small link-buttons">
+                    {{ 'blogs.article.read_more' | t }}
+                  </a>
+                </li>
+				  {% comment %}
+                {% if blog.comments_enabled? and article.comments_count > 0 %}
+                  <li>
+                    <a href="{{ article.url }}#comments" class="btn btn--small btn--link">
+                      {{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
+                    </a>
+                  </li>
+                {% endif %}
+				{% endcomment %}
+              </ul>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+   <div class="page-width">
+	 <div class="row clearfix grid-isotope">	
+    {% for article in blog.articles %}
+            <div class="col col-four item {% for tag in article.tags %} {{ tag | handle }} {% endfor %} all">
+              <div class="article--listing">
+                <h5 class="article__title desktop-blog-name"><a href="{{ article.url }}">{{ article.title }}</a></h5>
+				<h5 class="article__title mobile-blog-name"><a href="{{ article.url }}">{{ article.title | strip_html | truncate: 15, "..."}}</a></h5>
+                {% if settings.blog_show_author %}
+                  <span class="article__author">{{ 'blogs.article.by_author' | t: author: article.author }}</span>
+                {% endif %}
+
+                {% if settings.blog_show_date %}
+                  <span class="article__date">
+                    {{ article.published_at | time_tag: format: 'month_day_year' }}
+                  </span>
+                {% endif %}
+
+                {% if article.image %}
+                <p>
+                  <a href="{{ article.url }}">
+                    {{ article | img_url: '315x315' | img_tag: article.title, 'article__list-image' }}
+                  </a>
+                </p>
+                {% endif %}
+
+                <div class="rte">
+                  {% if article.excerpt.size > 0 %}
+                    {{ article.excerpt | strip_html | truncate: 65, " "}}
+                  {% else %}
+                    {{ article.content | strip_html | truncate: 65, " " }}
+                  {% endif %}
+                </div>
+				{% comment %}
+                {% if article.tags.size > 0 %}
+                  <div class="article__tags article__tags--list rte">
+                    {{ 'blogs.article.posted_in' | t }}
+                    {% for tag in article.tags %}
+                      <a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a>{% unless forloop.last %}, {% endunless %}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+				{% endcomment %}
+                <ul class="list--inline article__meta-buttons">
+                  {% if article.excerpt.size > 0 %}
+                    <li>
+                      <a href="{{ article.url }}" class="btn btn--secondary btn--small link-buttons">
+                        {{ 'blogs.article.read_more' | t }}
+                      </a>
+                    </li>
+                  {% endif %}
+
+                  {% if blog.comments_enabled? and article.comments_count == 0 %}
+                    <li>
+                      <a href="{{ article.url }}#comment_form" class="btn btn--secondary btn--small">
+                        {{ 'blogs.comments.title' | t }}
+                      </a>
+                    </li>
+                  {% endif %}
+
+                  {% if blog.comments_enabled? and article.comments_count > 0 %}
+                    <li>
+                      <a href="{{ article.url }}#comments" class="btn btn--secondary btn--small">
+                        {{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
+                      </a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+    {% endfor %}
+	</div>
+</div>
+  {% endif %}
+	<div class="blog-paginate">
+	  {% if paginate.pages > 1 %}
+		{% include 'pagination' %}
+	  {% endif %}
+  </div>
+</div>
+{% if paginate.next %}
+	<li class="load-more"><a href="{{ paginate.next.url }}">See More</a></li>        
+{% endif %}
+
+{% endpaginate %}
+
+{% schema %}
+  {
+    "name": "Blog pages",
+    "settings": [
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "Layout",
+        "default": "list",
+        "options": [
+          {
+            "value": "grid",
+            "label": "Grid"
+          },
+          {
+            "value": "list",
+            "label": "List"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "blog_show_author",
+        "label": "Show author",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "blog_show_date",
+        "label": "Show date",
+        "default": true
+      }
+    ]
+  }
+{% endschema %}

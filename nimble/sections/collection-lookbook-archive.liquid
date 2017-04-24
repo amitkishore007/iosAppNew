@@ -1,0 +1,302 @@
+	{% if section.settings.layout == 'grid' %}
+	  {%- assign limit = section.settings.grid | times: section.settings.rows -%}
+	{% else %}
+	  {%- assign limit = 4 -%}
+	{% endif %}
+
+	{% paginate collection.products by 50 %}
+	<div data-section-id="{{ section.id }}" data-section-type="collection-template" class="lookbook-collection">
+	  <header class="collection-header">
+		{% if settings.show_lookbook_collection_image %}
+		  <div class="collection-hero">
+			<div class="collection-hero__image" style="background-image: url({{ collection.image | img_url: '1400x540', crop: 'top' }});"></div>
+		  </div>
+		  {% endif %}
+		  <div class="collection-description-wrapper page-width">
+			<div class="row clearfix">
+				<div class="col col-eight">
+					{% if settings.show_lookbook_collection_title %}
+						<h5 class="lookbok-collection-title page-width">{{ collection.title }}</h5>
+					{% endif %}	
+					{% if settings.show_lookbook_collection_description %}
+					  {% if collection.description != blank %}
+						<div class="rte collection-description page-width">
+						  {{ collection.description }}
+						</div>
+					  {% endif %}
+				    {% endif %} 
+					{% if settings.show_lookbook_collection_button %}
+					  <div class="shop-button">
+						<a href="{{ collection.url }}" class="link-button">Shop Now</a>
+					  </div>
+					{% endif %}   
+				</div>
+			</div>
+		</div>
+	  </header>
+
+	  <div class="lookbook-collection-container">
+	  <div class="page-width" id="Collection">
+		{% if section.settings.layout == 'grid' %}
+		  {% case section.settings.grid %}
+		  {% when '2' %}
+			{%- assign grid_item_width = 'medium-up--one-half' -%}
+			{%- assign image_size = '540x600' -%}
+		  {% when '3' %}
+			{%- assign grid_item_width = 'small--one-half medium-up--one-third' -%}
+			{%- assign image_size = '295x450' -%}
+		  {% when '4' %}
+			{%- assign grid_item_width = 'small--one-half medium-up--one-quarter' -%}
+			{%- assign image_size = '250x' -%}
+		  {% when '5' %}
+			{%- assign grid_item_width = 'small--one-half medium-up--one-fifth' -%}
+			{%- assign image_size = '195x' -%}
+		  {% endcase %}
+		  <div class="collection-items grid--uniform{% if collection.products_count > 0 %}{% endif %}">
+			<div class="lb-mas-items">
+				<div class="grid-sizer"></div>
+				{% for product in collection.products %}
+					{% capture newcycle %}{% cycle 'one','two','three','four' %}{% endcapture %}
+					{% if newcycle == 'one'%}
+						<div class="lb-mas-item {{ newcycle}}">
+						   <div class="grid-view-item lb-item {% unless product.available %} product-price--sold-out grid-view-item--sold-out{% endunless %}">
+								<img class="grid-view-item__image" src="{{ product.featured_image | img_url: '475x538', crop: 'top' }}" alt="{{ product.featured_image.alt }}">
+								<!--<div class="overlay">
+									<div class="overlay-text">
+										<h4 class="shop-now">Shop Now </h4>
+										<h5>{{ product.title }}</h5>
+									</div>
+								</div>
+								<a class="overlay-link" href="{{ product.url | within: collection }}"> </a>-->
+						  </div>
+					  </div>
+					{% elsif newcycle == 'two' %}	
+					  <div class="lb-mas-item {{ newcycle}}">
+						   <div class="grid-view-item lb-item {% unless product.available %} product-price--sold-out grid-view-item--sold-out{% endunless %}">
+							  <img class="grid-view-item__image" src="{{ product.featured_image | img_url: '475x538', crop: 'top' }}" alt="{{ product.featured_image.alt }}">
+								<!--<div class="overlay">
+									<div class="overlay-text">
+										<h4 class="shop-now">Shop Now </h4>
+										<h5>{{ product.title }}</h5>
+									</div>
+								</div>
+								<a class="overlay-link" href="{{ product.url | within: collection }}"> </a>-->
+						  </div>
+					  </div>
+					  {% else %}
+					  <div class="lb-mas-item {% cycle 'three','four' %}">
+						   <div class="grid-view-item lb-item{% unless product.available %} product-price--sold-out grid-view-item--sold-out{% endunless %}">
+								<img class="grid-view-item__image" src="{{ product.featured_image | img_url: '815x538', crop: 'top' }}" alt="{{ product.featured_image.alt }}">
+							 <!-- <div class="overlay">
+									<div class="overlay-text">
+										<h4 class="shop-now">Shop Now </h4>
+										<h5>{{ product.title }}</h5>
+									</div>
+								</div>
+								<a class="overlay-link" href="{{ product.url | within: collection }}"> </a>-->
+						  </div>
+					  </div>
+					{% endif %}
+				{% else %}
+			  {% comment %}
+			  Add default products to help with onboarding for collections/all only.
+
+			  The onboarding styles and products are only loaded if the
+			  store has no products.
+			  {% endcomment %}
+			  {% if collection.handle == 'all' and collection.all_vendors.size == 0 and collection.all_types.size == 0 %}
+				<div class="grid__item">
+				  <div class="grid grid--uniform">
+					{% for i in (1..limit) %}
+					  <div class="grid__item {{ grid_item_width }}">
+						<div class="grid-view-item">
+						  <a href="#" class="grid-view-item__link">
+							<div class="grid-view-item__image">
+							  {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+							  {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+							</div>
+							<div class="h4 grid-view-item__title">{{ 'homepage.onboarding.product_title' | t }}</div>
+							<div class="grid-view-item__meta">
+							  <span class="product-price__price">$19.99</span>
+							</div>
+						  </a>
+						</div>
+					  </div>
+					{% endfor %}
+				  </div>
+				</div>
+			  {% else %}
+				{%- assign is_empty_collection = true -%}
+			  {% endif %}
+			{% endfor %}
+			 </div>	  
+			{% if paginate.next %}
+				<div class="more"><a href="{{ paginate.next.url }}"></a></div> 
+			{% endif %}
+		  </div>
+		{% else %}
+		  <div class="list-view-items">
+			{% for product in collection.products %}
+			  <a href="{{ product.url | within: collection }}" class="list-view-item">
+				{% include 'lookbook-product-card-list', product: product %}
+			  </a>
+			{% else %}
+
+			  {% comment %}
+			  Add default products to help with onboarding for collections/all only.
+
+			  The onboarding styles and products are only loaded if the
+			  store has no products.
+			  {% endcomment %}
+			  {% if collection.handle == 'all' and collection.all_vendors.size == 0 and collection.all_types.size == 0%}
+				{% for i in (1..4) %}
+				  <a href="#" class="list-view-item">
+					<div class="list-view-item__image-column">
+					  <div class="list-view-item__image-wrapper">
+						<div class="list-view-item__image">
+						  {%- assign placeholder = 'placeholder-product-' | append: i -%}
+						  {% include placeholder %}
+						</div>
+					  </div>
+					</div>
+
+					<div class="list-view-item__title-column">
+					  <div class="list-view-item__title">{{ 'homepage.onboarding.product_title' | t }}</div>
+					</div>
+
+					<div class="list-view-item__price-column">
+					  <span class="product-price__price">$19.99</span>
+					</div>
+				  </a>
+				{% endfor %}
+			  {% else %}
+				{%- assign is_empty_collection = true -%}
+			  {% endif %}
+			{% endfor %}
+		  </div>
+		{% endif %}
+
+		{% if is_empty_collection %}
+		  <div class="grid__item small--text-center">
+			<p class="text-center">{{ 'collections.general.no_matches' | t }}</p>
+		  </div>
+		{% endif %}
+		{% comment %}
+		{% if paginate.pages > 1 %}
+		  {% include 'pagination' %}
+		{% endif %}
+		{% endcomment %}
+		<div class="shop-page-link" style="text-align:center"><a href="https://nimble-activewear.myshopify.com/collections/all" class="link-button">Shop this collection</a></div>
+	  </div>
+	 </div> 
+	</div>
+	{% endpaginate %}
+
+	{% schema %}
+	  {
+		"name": "Collection pages",
+		"settings": [
+		  {
+			"type": "select",
+			"id": "layout",
+			"label": "Layout",
+			"default": "grid",
+			"options": [
+			  {
+				"value": "grid",
+				"label": "Grid"
+			  },
+			  {
+				"value": "list",
+				"label": "List"
+			  }
+			]
+		  },
+		  {
+			"type": "select",
+			"id": "grid",
+			"label": "Products per row (grid only)",
+			"default": "3",
+			"options": [
+			  {
+				"value": "2",
+				"label": "2"
+			  },
+			  {
+				"value": "3",
+				"label": "3"
+			  },
+			  {
+				"value": "4",
+				"label": "4"
+			  },
+			  {
+				"value": "5",
+				"label": "5"
+			  }
+			]
+		  },
+		  {
+			"type": "select",
+			"id": "rows",
+			"label": "Rows per page (grid only)",
+			"default": "2",
+			"options": [
+			  {
+				"value": "2",
+				"label": "2"
+			  },
+			  {
+				"value": "3",
+				"label": "3"
+			  },
+			  {
+				"value": "4",
+				"label": "4"
+			  },
+			  {
+				"value": "5",
+				"label": "5"
+			  },
+			  {
+				"value": "6",
+				"label": "6"
+			  },
+			  {
+				"value": "7",
+				"label": "7"
+			  },
+			  {
+				"value": "8",
+				"label": "8"
+			  }
+			]
+		  },
+		  {
+			"type": "checkbox",
+			"id": "show_collection_image",
+			"label": "Show collection image",
+			"default": true
+		  },
+		  {
+			"type": "checkbox",
+			"id": "show_vendor",
+			"label": "Show product vendors",
+			"default": false
+		  },
+		  {
+			"type": "checkbox",
+			"id": "sort_enable",
+			"label": "Enable sorting",
+			"default": true
+		  },
+		  {
+			"type": "checkbox",
+			"id": "tags_enable",
+			"label": "Enable tag filtering",
+			"default": true
+		  }
+		]
+	  }
+	{% endschema %}
+

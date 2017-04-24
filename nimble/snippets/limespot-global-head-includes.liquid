@@ -1,0 +1,8 @@
+<script type="text/javascript" async src="https://limespot.azureedge.net/storefront/2.0.0/js/shopify/storefront.min.js?key=hnid6-ko1luv6nog1eyu9ziv2ht-9m3pq"></script>
+<script>
+window.LimeSpot = window.LimeSpot === undefined ? {} : LimeSpot;{% assign t = template | prepend: '/' | append: '.' %}
+{% if t contains '/product.' %}LimeSpot.PageInfo = { Type: "Product", ReferenceIdentifier: "{{ product.id }}"};
+{% elsif t contains '/collection.' %}LimeSpot.PageInfo = { Type: "Collection", ReferenceIdentifier: "{{ collection.id }}", Personalized: {%if collection.metafields.LimeSpot['Personalized'] == "true"%}true{%else%}false{%endif%} };
+{% endif %}{% if customer %}LimeSpot.UserInfo = { Identifier: "{{ customer.id }}", Email: "{{ customer.email }}", FirstName: "{{ customer.first_name }}", LastName: "{{ customer.last_name }}" };
+{% endif %}</script>
+{% comment %}Checksum: 93c65b3ba00787fa9b5e23e773803777{% endcomment %}

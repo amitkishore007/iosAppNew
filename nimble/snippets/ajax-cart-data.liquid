@@ -1,0 +1,71 @@
+
+{% if cart.item_count > 0 %}
+	<h5>YOUR BAG</h5>
+	<form action="/cart" method="post" novalidate class="cart">
+  <div class="ajax-cart-items">
+    {% for item in cart.items %}
+    <div class="cart__row border-bottom line{{ forloop.index }} cart-flex{% if forloop.first %} border-top{% endif %} clearfix">
+      <div class="cart-flex-item">
+        <a href="{{ item.url | within: collections.all }}">
+          <img class="cart__image" src="{{ item | img_url: '140x' }}" alt="{{ item.title | escape }}">
+        </a>
+      </div>
+      <div class="cart__meta small--text-left cart-flex-item">
+        <div class="product-id" style="display: none">{{ item.id }}</div>
+        <h6>{{ item.product.title }}</h6>
+        {% unless item.variant.title contains 'Default' %}
+        <div class="cart__meta-text">
+          <h6>
+            {% for option in item.product.options %}
+            <span>{{ option }}: {{ item.variant.options[forloop.index0] }}</span>
+            {% endfor %}
+          </h6>
+        </div>
+        {% endunless %}
+        <h6><span>QUANTITY: </span><span class="product-qty">{{ item.quantity}}</span></h6>
+        <h6 class="p-price"><span>PRICE: </span>{{ item.price | money }}</h6>
+        <h6 style="display: none;"><span>Total Price: </span><span class="total-price">{{ item.line_price | money }}</span></h6>
+        <p class="">
+          <a href="#" class="btn btn--small btn--secondary cart-remove">{{ 'cart.general.remove' | t }}</a>
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+
+  <footer class="cart__footer">
+    <div class="cart-subtotals">
+      <span class="cart__subtotal-title">{{ 'cart.general.subtotal' | t }} : </span>
+      <span class="cart-subtotal">{{ cart.total_price | money }}</span>
+    </div>
+    {% if cart.total_discounts > 0 %}
+    <div class="cart__savings">
+      {{ 'cart.general.savings' | t }}
+      <span class="cart__savings-amount">{{ cart.total_discounts | money }}</span>
+    </div>
+    {% endif %}
+     <div class="shipping-text">Shipping taxes, and discounts calculated at checkout</div>
+    <div class="buttons">
+      <div class="ajax-view-cart">
+        <a href="/cart" class="link-button">View Cart</a>
+      </div>
+      <button type="submit" class="btn--secondary btn--full cart__checkout link-button" name="checkout">
+        {{ 'cart.general.checkout' | t }}
+      </button>
+      {% if additional_checkout_buttons %}
+      <div class="additional-checkout-buttons">
+        {{ content_for_additional_checkout_buttons }}
+      </div>
+      {% endif %}
+    </div>
+  </footer>
+</form>
+{% else %}
+  <div class="empty-page-content text-center">
+    <h1>{{ 'cart.general.title' | t }}</h1>
+    <p>{{ 'cart.general.empty' | t }}</p>
+    <a href="/collections/all" class="btn btn--has-icon-after">{{ 'general.404.link' | t }}{% include 'icon-arrow-right' %}</a>
+  </div>
+{% endif %}
+  

@@ -1,0 +1,40 @@
+{% if settings.lookbok_listing_banner %}
+	<div class="lookbook-listing-banner" style="background-image: url({{ settings.lookbok_listing_banner | img_url: '1400x350', crop: 'center' }});"></div>
+{% else %}
+	<div class="lookbook-listing-banner" style="background-image: url({{ 'lookbok_listing_banner.jpg' | asset_url }});"></div>
+{% endif %}	
+<div class="filter-wrapper title-wrapper">
+  <div class="page-width">
+      <h1 class="page-title">{{ page_title }}</h1>
+  </div>
+</div>  
+<div class="page-width lookbook-page">
+  {% paginate collections by 45 %}
+  <div class="row clearfix">
+	  <div class="col col-elevan">
+		<div class="mas-items">
+			<div class="grid-sizer"></div>
+			{% for collection in collections %}
+				 {% if collection.template_suffix != blank %}
+				  <div class="mas-item">
+					{% include 'collection-lookbook-grid-item' %}
+				  </div>
+			  {% endif %}
+			{% endfor %}
+		</div>
+	  </div>
+  </div>
+  <div class="paginate">
+  {% if paginate.pages > 1 %}
+		{% include 'pagination' %}
+	{% endif %}
+ </div>	
+	<ul>
+	{% if paginate.next %}
+		<li class="load-more"><a href="{{ paginate.next.url }}">See More</a></li> 
+	  {% endif %}
+	</ul>
+   
+  {% endpaginate %}
+</div>
+

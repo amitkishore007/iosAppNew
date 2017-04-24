@@ -1,0 +1,36 @@
+<div id="mini-cart">
+		<a href="javascript:void(0);" class="minicart-close"><img src="{{'mini-close.png' | asset_url }}" alt="Close" /></a>
+		<div class="minicart-content">
+			<h5>My Bag</h5>
+			<form action="/cart" method="post" novalidate class="cart ajaxcart">
+				<div class="ajax-container">
+					<div class="ajax-content clearfix">
+						<div class="pimage">
+							<img src="" alt="Product" />
+						</div>
+						<div class="other-content">
+							<h6 class="product-name"></h6>
+							<h6><span>SIZE: </span><span class="size"></span></h6>
+							<h6><span>QUANTITY: </span><span class="product-quantity"></span></h6>
+                            <h6><span>PRICE: </span><span class="product-price"></span></h6>
+							<h6><span>Total: </span> <span class="product-total-price"></span></h6>
+							<a href="#" class="remove" >Remove</a>
+						</div>
+					</div>
+					<div class="buttons">
+						<div class="ajax-view-cart">
+							<a href="/cart" class="link-button">View Cart</a>
+						</div>
+						<button type="submit" class="btn--secondary btn--full cart__checkout link-button" name="checkout">
+							{{ 'cart.general.checkout' | t }}
+						</button>
+					 {% if additional_checkout_buttons %}
+					  <div class="additional-checkout-buttons">
+						{{ content_for_additional_checkout_buttons }}
+					  </div>
+					 {% endif %}
+					 </div>
+				</div> 
+			</form>
+		</div>
+	 </div>

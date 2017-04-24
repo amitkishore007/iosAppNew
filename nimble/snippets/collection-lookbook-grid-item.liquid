@@ -1,0 +1,40 @@
+{% unless collection_image_size %}
+  {%- assign collection_image_size = '457x686' -%}
+  {%- assign collection_mobile_image_size = '412x260' -%}
+{% endunless %}
+{% comment %}
+	{% for collection in collections %}
+        <img src="{{ collection.products.first | img_url: 'large' }}" alt="{{ collection.title | escape  }}" />
+	{% endfor %}
+{% endcomment %}
+{% capture collection_image_link %}{{ collection.products.first | img_url: collection_image_size, crop: 'center'}}{% endcapture %}
+{% capture collection_mobile_image_link %}{{ collection.products.first | img_url: collection_mobile_image_size, crop: 'top'}}{% endcapture %}
+ {% comment%}
+	{% if collection.empty? %}
+	  {% comment %}add default state for collection block in theme editor{% endcomment %}
+	  {% assign collection_image_url = '' %}
+	{% else %}
+	  {% if collection.image %}
+		{% capture collection_image_url %}{{ collection | img_url: collection_image_size, crop: 'top' }}{% endcapture %}
+	  {% elsif collection.products.last %}
+		{% capture collection_image %}{{ collection.products.last | img_url: collection_image_size, crop: 'top'}}{% endcapture %}
+	  {% endif %}
+	{% endif %}
+{% endcomment%}	
+<div class="collection-grid-items">
+	<div class="collection-item desktop-lookbook-img">
+		<img src="{{ collection_image_link }}" alt="{{ collection.title }}" />
+		<div class="overlay">
+			<h4>SEE MORE</h4>
+		</div>
+		<a href="{{ collection.url }}" class="overlay-link"></a>
+	</div>
+  <div class="collection-item mobile-lookbook-img">
+		<img src="{{ collection_mobile_image_link }}" alt="{{ collection.title }}" />
+		<div class="overlay">
+			<h4>SEE MORE</h4>
+		</div>
+		<a href="{{ collection.url }}" class="overlay-link"></a>
+	</div>
+	<h5>{{ collection.title }}</h5>
+</div>

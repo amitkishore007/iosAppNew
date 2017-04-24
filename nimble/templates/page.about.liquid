@@ -1,0 +1,217 @@
+	{% if settings.about_desktop_banner %}
+		<div class="about-banner" style="background-image:url({{ settings.about_desktop_banner | img_url: '541x424', crop: 'top' }});"></div>
+	{% else %}
+		<div class="about-banner" style="background-image:url({{ 'about-banner.jpg' | asset_url }});"></div>
+	{% endif %}
+	{% if settings.about_mobile_banner %}
+		<div class="mobile-about-banner" style="background-image:url({{ settings.about_mobile_banner | img_url: '468x312', crop: 'top' }});"></div>
+	{% else %}
+		<div class="mobile-about-banner" style="background-image:url({{'mobile-about-banner.jpg' | asset_url }});"></div>
+	{% endif %}	
+	<div class="about-text-container">
+		<div class="row clearfix">
+			<div class="page-header">
+				<h1 class="page-title">{{ page.title }}</h1>
+			</div>
+			<div class="col col-nine about-left-space">
+				{% if settings.about_desktop_intro %}
+					<div class="about-intro">
+						{{ settings.about_desktop_intro }}
+					</div>
+				{% endif %}	
+				{% if settings.about_mobile_intro %}
+              	<div class="mobile-about-intro">
+					{{ settings.about_mobile_intro }}
+              	</div> 
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="about-other-content">
+		{% if settings.row_one %}
+		 <div class="pages-container"> 
+			<div class="page-width">
+			  <div class="row clearfix">
+					<div class="col col-six mobile-about-img">
+						<div class="image">
+							<div class="title">
+								<h2 class="page-title h1 alternative-heading">{{ settings.row_one_title }}</h2>
+							</div>
+							<img src="{{ settings.row_one_image | img_url: '436x650', crop: 'top'}}" alt="{{ settings.row_one_title }}" />
+						</div>
+					</div>
+					<div class="col col-five">
+						<div class="text container-flex desktop-text">
+							{{ settings.row_one_text }}
+						</div>
+                      <!-- 	<div class="mobile-text">
+							{{ settings.row_one_text | strip_html | truncate: 45, " "}}
+						</div> -->
+					</div>
+					<div class="col col-six pull-right desktop-about-img">
+						<div class="image">
+							<div class="title">
+								<h2 class="page-title h1 alternative-heading">{{ settings.row_one_title }}</h2>
+							</div>
+							<img src="{{ settings.row_one_image | img_url: '436x650', crop: 'top'}}" alt="{{ settings.row_one_title }}" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+		{% if settings.row_two %}
+		<div class="pages-container alternate-content"> 
+			<div class="page-width">
+			  <div class="row clearfix">
+					<div class="col col-six mobile-about-img">
+						<div class="image">
+							<div class="title">
+								<h2 class="page-title h1 alternative-heading">{{ settings.row_two_title }}</h2>
+							</div>
+							<img src="{{ settings.row_two_image | img_url: '436x650', crop: 'top'}}" alt="{{ settings.row_two_title }}" />
+						</div>
+					</div>
+					<div class="col col-six desktop-about-img">
+						<div class="image alternate-image">
+                         <img src="{{ settings.row_two_image | img_url: '436x650', crop: 'top'}}" alt="{{ settings.row_two_title }}" />
+							<div class="title">
+								<h2 class="page-title h1 alternative-heading ">{{ settings.row_two_title }}</h2>
+							</div>
+						</div>
+					</div>
+                    <div class="col col-five pull-right">
+                            <div class="text container-flex desktop-text">
+                                {{ settings.row_two_text }}
+                            </div>
+                            <!-- <div class="mobile-text">
+                               {{ settings.row_two_text | strip_html | truncate: 45, " "}}
+                            </div> -->
+                    </div>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+		{% if settings.row_three %}
+		<div class="pages-container"> 
+			<div class="page-width">
+			  <div class="row clearfix">
+					<div class="col col-six mobile-about-img">
+						<div class="image">
+							<div class="title">
+								<h2 class="page-title h1 alternative-heading">{{ settings.row_three_title }}</h2>
+							</div>
+							<img src="{{ settings.row_three_image | img_url: '436x650', crop: 'top'}}" alt="{{ settings.row_three_title }}" />
+						</div>
+					</div>
+					<div class="col col-five">
+						<div class="text container-flex desktop-text">
+							 {{ settings.row_three_text }}
+						</div>
+                      <!-- 	<div class="mobile-text">
+							{{ settings.row_three_text | strip_html | truncate: 45, " "}}
+						</div> -->
+					</div>
+					<div class="col col-six pull-right desktop-about-img">
+						<div class="image">
+							<div class="title">
+								<h2 class="page-title h1 alternative-heading">{{ settings.row_three_title }}</h2>
+							</div>
+							<img src="{{ settings.row_three_image | img_url: '436x650', crop: 'top'}}" alt="{{ settings.row_three_title }}" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+		{% if settings.row_four %}
+		<div class="pages-container alternate-content"> 
+			<div class="page-width">
+			  <div class="row clearfix">
+					<div class="col col-six mobile-about-img">
+						<div class="image">
+							<div class="title">
+								<h2 class="page-title h1 alternative-heading">{{ settings.row_four_title }}</h2>
+							</div>
+							<img src="{{ settings.row_four_image | img_url: '436x650', crop: 'top'}}" alt="{{ settings.row_four_title }}" />
+						</div>
+					</div>
+					<div class="col col-six desktop-about-img">
+						<div class="image alternate-image">
+                         <img src="{{ settings.row_four_image | img_url: '436x650', crop: 'top'}}" alt="{{ settings.row_four_title }}" />
+							<div class="title">
+								<h2 class="page-title h1 alternative-heading ">{{ settings.row_four_title }}</h2>
+							</div>
+						</div>
+					</div>
+                    <div class="col col-five pull-right">
+                            <div class="text container-flex desktop-text">
+                               {{ settings.row_four_text }}
+                            </div>
+                           <!--  <div class="mobile-text">
+                                {{ settings.row_four_text | strip_html | truncate: 45, " "}}
+                            </div> -->
+                    </div>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+      {% if settings.row_five %}
+		<div class="pages-container"> 
+			<div class="page-width">
+			  <div class="row clearfix">
+					<div class="col col-six mobile-about-img">
+						<div class="image">
+							<div class="title">
+								<h2 class="page-title h1 alternative-heading">{{ settings.row_five_title }}</h2>
+							</div>
+							<img src="{{ settings.row_five_image | img_url: '436x650', crop: 'top'}}" alt="{{ settings.row_five_title }}" />
+						</div>
+					</div>
+					<div class="col col-five">
+						<div class="text container-flex desktop-text">
+							 {{ settings.row_five_text }}
+						</div>
+                      <!-- 	<div class="mobile-text">
+							{{ settings.row_five_text | strip_html | truncate: 45, " "}}
+						</div> -->
+					</div>
+					<div class="col col-six pull-right desktop-about-img">
+						<div class="image">
+							<div class="title">
+								<h2 class="page-title h1 alternative-heading">{{ settings.row_five_title }}</h2>
+							</div>
+							<img src="{{ settings.row_five_image | img_url: '436x650', crop: 'top'}}" alt="{{ settings.row_five_title }}" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+	<div class="latest-blog row clearfix">
+	 {% for article in blogs.test.articles %}
+	  {% if forloop.first == true %}
+	  <div class="col col-five">
+		<div class="latest-blog-img">
+			<img src="{{ article.image.src | img_url: '600x475', crop: 'center'}}">
+		</div>
+        <div class="mobile-latest-blog-img">
+			<img src="{{ article.image.src | img_url: '155x230', crop: 'center'}}">
+		</div>
+	  </div>
+	  <div class="col col-seven">	  
+		<div class="about-blog container-flex">
+			<div class="about-blog-content">
+			  <h2 class="alternative-heading">{{ article.title }}</h2>
+			  <div class="article-body textile">
+                <div class="desktop-desc">{{ article.content | truncatewords: 50, " "}}</div>
+                <div class="mobile-desc">{{ article.content | truncatewords: 10, " "}}</div>
+				<div class="text-center"><a href="{{ article.url }}" class="link-button">Read more</a></div>
+			  </div>
+		  </div>
+		</div>
+	</div>
+	 {% endif %}
+	 {% endfor %}
+	</div>
+</div>	

@@ -1,0 +1,181 @@
+<div class="page-width1" id="next-page">
+  {% if section.settings.title != blank %}
+    <div class="section-header text-center">
+      <h2 class="home-product-title">{{ section.settings.title | escape }}</h2>
+    </div>
+  {% endif %}
+
+  {%- assign collection = collections[section.settings.collection] -%}
+
+  {% case section.settings.grid %}
+    {% when '2' %}
+      {%- assign grid_item_width = 'medium-up--one-half' -%}
+      {%- assign image_size = '540x600' -%}
+    {% when '3' %}
+      {%- assign grid_item_width = 'small--one-half medium-up--one-third' -%}
+      {%- assign image_size = '345x550' -%}
+    {% when '4' %}
+      {%- assign grid_item_width = 'small--one-half medium-up--one-quarter' -%}
+      {%- assign image_size = '250x' -%}
+    {% when '5' %}
+      {%- assign grid_item_width = 'small--one-half medium-up--one-fifth' -%}
+      {%- assign image_size = '195x' -%}
+  {% endcase %}
+
+  {%- assign product_limit = section.settings.grid | times: section.settings.rows -%}
+
+  <div class="grid grid--uniform home-carousel owl-carousel grid--view-items product-slider-width home-product-slider clearfix">
+    {% for product in collection.products limit: product_limit %}
+      <div class="">
+        {% unless grid_image_width %}
+            {%- assign grid_image_width = '400x600' -%}
+          {% endunless %}
+          <div class="grid-view-item{% unless product.available %} product-price--sold-out grid-view-item--sold-out{% endunless %}">
+              <img class="grid-view-item__image" src="{{ product.images[2] | img_url: grid_image_width, crop:'center'}}" alt="{{ product.featured_image.alt }}">
+              <!--<div class="h5 grid-view-item__title product-title">{{ product.title }}</div>-->
+              {% if section.settings.show_vendor %}
+                <div class="grid-view-item__vendor">{{ product.vendor }}</div>
+              {% endif %}
+              {% comment %}
+              <div class="grid-view-item__meta">
+                {% include 'product-price' %}
+              </div>
+              {% endcomment %}
+			<a class="grid-view-item__link" href="{{ product.url | within: collection }}">
+            </a>
+            <div class="grid-view-item__title overlay-box">
+              <div class="overlay-box-content">
+                <h5 class="shop-now">Shop Now <span class="line">&nbsp;</span></h5>
+                <p>{{ product.title }}</p>
+              </div>
+            </div>
+          </div>
+      </div>
+    {% else %}
+
+      {% for i in (1..product_limit) %}
+        <div class="grid__item {{ grid_item_width }}">
+          <div class="grid-view-item">
+            <a href="#" class="grid-view-item__link">
+              <div class="grid-view-item__image">
+                {% capture current %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+                {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+				
+				<div class="grid-view-item__title overlay-box">
+					<div class="overlay-box-content">
+						<h5 class="shop-now">Shop Now <span class="line">&nbsp;</span></h5>
+						<p>{{ 'homepage.onboarding.product_title' | t }}</p>
+					</div>
+				</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+   <div class="slide_direction_key"> 
+     <span class="leftarrow-direction lf"><img src="{{ 'left-arrow-post.png' | asset_url }}" alt="Left Arrow" /></span>
+     <span class="rightarrow-direction rf"><img src="{{ 'right-arrow-post.png' | asset_url }}" alt="Right Arrow" /> </span>
+  </div>
+
+  {% if section.settings.show_view_all %}
+    <hr class="hr--invisible"></hr>
+    <div class="text-center">
+      <a href="{{ collection.url }}" class="btn">
+        {{ 'collections.general.view_all' | t }}
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+
+{% schema %}
+  {
+    "name": "Featured collection",
+    "class": "index-section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Featured collection"
+      },
+      {
+        "id": "collection",
+        "type": "collection",
+        "label": "Collection"
+      },
+      {
+        "type": "select",
+        "id": "grid",
+        "label": "Products per row",
+        "default": "3",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "rows",
+        "label": "Rows",
+        "default": "2",
+        "options": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "label": "Show product vendors",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "show_view_all",
+        "label": "Show 'View all' button",
+        "default": false
+      }
+    ],
+    "presets": [
+      {
+        "name": "Featured collection",
+        "category": "Collection"
+      }
+    ]
+  }
+{% endschema %}

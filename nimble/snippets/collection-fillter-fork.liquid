@@ -1,0 +1,44 @@
+
+		<div class="filters-toolbar-wrapper">
+			<div class="page-width">
+				<div class="filters-toolbar">
+					<div class="filters-toolbar__item size-filter">
+					  {% assign tags = 'xxs, xs, s, m, l' | split: ',' %}
+						<ul>
+						  <h5 class="filter-title">Size</h5>
+                          	{% assign selected_size = "" %}
+							 <!-- <li>{{ 'All' | link_to:collection.url }}</li> -->
+							{% for t in tags %}
+								{% assign tag = t | strip %}
+								{% if current_tags contains tag %}
+									<li class="active {{ tag }}">{{ tag }}</li>
+                          			{% assign selected_size = tag %}
+								{% elsif collection.all_tags contains tag %}
+									<li class="{{ tag }}">{{ tag | link_to_tag: tag }}</li>
+								{% endif %}
+							{% endfor %}
+                          <input type="hidden" name="size_filter" id="size_filter" value="{{ selected_size }}">
+						</ul>
+					</div>
+					<div class="filters-toolbar__item text-right length-filter">
+						{% assign length = 'Short, 3/4, 7/8, Long' | split: ',' %}
+						<ul>
+						  <h5 class="filter-title">Length</h5>
+                          	{% assign selected_length = "" %}
+							<!-- <li>{{ 'All' | link_to:collection.url }}</li> -->
+							{% for t in length %}
+								{% assign tag = t | strip %}
+								{% if current_tags contains tag %}
+									<li class="active">{{ tag }}</li>
+                          			{% assign selected_length = tag %}
+								{% elsif collection.all_tags contains tag %}
+									<li>{{ tag | link_to_tag: tag }}</li>
+								{% endif %}
+							{% endfor %}
+                          <input type="hidden" name="length_filter" id="length_filter" value="{{ selected_size }}">
+						</ul>
+					</div>
+				</div>
+			</div>
+      </div>
+		

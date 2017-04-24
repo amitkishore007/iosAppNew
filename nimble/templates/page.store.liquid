@@ -1,0 +1,97 @@
+<div class="page-width">
+  <div class="row clearfix">
+	<div class="pages-container"> 
+		 <div class="page-header">
+			<h1 class="page-title">{{ page.title }}</h1>
+		 </div>
+		 <div class="page-content">
+           {% if settings.first_store %}
+           	<div class="store-content">
+			 <div class="row clearfix store-des">
+			 	<div class="col col-four space-top">
+					{{ settings.first_store_content }}
+				</div>
+			 	<div class="col col-eight pull-right">
+					{% if settings.first_store_image %}
+						<img src="{{ settings.first_store_image | img_url: '541x424', crop: 'center' }}" alt="Nimble Store" />
+                  	{% endif %}
+				</div>
+           </div>
+              <div style="-webkit-filter: grayscale(100%);filter: grayscale(100%);"> <iframe src="{{ settings.first_store_map | strip_html }}" width="900" height="250" frameborder="0" style="border:0" allowfullscreen></iframe></div>
+		  </div>
+           {% endif %}
+           {% if settings.second_store %}
+           	<div class="store-content">
+			 <div class="row clearfix store-des">
+			 	<div class="col col-four space-top">
+					{{ settings.second_store_content }}
+				</div>
+			 	<div class="col col-eight pull-right">
+					{% if settings.second_store_image %}
+						<img src="{{ settings.second_store_image | img_url: '541x424', crop: 'center' }}" alt="Nimble Store" />
+                  	{% endif %}
+				</div>
+              </div>
+              <div style="-webkit-filter: grayscale(100%);filter: grayscale(100%);"> <iframe src="{{ settings.second_store_map | strip_html }}" width="900" height="250" frameborder="0" style="border:0" allowfullscreen></iframe></div>
+		  </div>
+           {% endif %}
+         
+            {% if settings.third_store %}
+           	<div class="store-content">
+			 <div class="row clearfix store-des">
+			 	<div class="col col-four space-top">
+					{{ settings.third_store_content }}
+				</div>
+			 	<div class="col col-eight pull-right">
+					{% if settings.second_store_image %}
+						<img src="{{ settings.third_store_image | img_url: '541x424', crop: 'center' }}" alt="Nimble Store" />
+                  	{% endif %}
+				</div>
+           </div>
+         	  <div style="-webkit-filter: grayscale(100%);filter: grayscale(100%);"> <iframe src="{{ settings.third_store_map | strip_html }}" width="900" height="250" frameborder="0" style="border:0" allowfullscreen></iframe></div>
+		  </div>
+           {% endif %}
+            {% if settings.fourth_store %}
+           	<div class="store-content">
+			 <div class="row clearfix store-des">
+			 	<div class="col col-four space-top">
+					{{ settings.fourth_store_content }}
+				</div>
+			 	<div class="col col-eight pull-right">
+					{% if settings.fourth_store_image %}
+						<img src="{{ settings.fourth_store_image | img_url: '541x424', crop: 'center' }}" alt="Nimble Store" />
+                  	{% endif %}
+				</div>
+           </div>
+              <div style="-webkit-filter: grayscale(100%);filter: grayscale(100%);"> <iframe src="{{ settings.fourth_store_map | strip_html }}" width="900" height="250" frameborder="0" style="border:0" allowfullscreen></iframe></div>
+		  </div>
+           {% endif %}
+              {% if settings.fifth_store %}
+           	<div class="store-content">
+				 <div class="row clearfix store-des">
+			 	<div class="col col-four space-top">
+					{{ settings.fifth_store_content }}
+				</div>
+			 	<div class="col col-eight pull-right">
+					{% if settings.fifth_store_image %}
+						<img src="{{ settings.fifth_store_image | img_url: '541x424', crop: 'center' }}" alt="Nimble Store" />
+                  	{% endif %}
+				</div>
+          	 </div>
+              <div style="-webkit-filter: grayscale(100%);filter: grayscale(100%);"> <iframe src="{{ settings.fifth_store_map | strip_html }}" width="900" height="250" frameborder="0" style="border:0" allowfullscreen></iframe></div>
+              
+		   </div>
+           {% endif %}
+     	 </div>
+	  </div>
+  </div>
+</div>
+<style>
+  	iframe{
+    	width: 100%;
+    }
+    .store-content {
+      margin-bottom: 80px;
+  }
+  .store-des{margin-bottom:30px;}
+</style>

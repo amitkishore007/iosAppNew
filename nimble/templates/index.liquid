@@ -1,0 +1,11 @@
+{{ content_for_index }}
+{% for article in blogs.news.articles %}
+    {% if forloop.last != true %}
+    <div class="article">
+      <h3>{{ article.title }}</h3>
+      <div class="article-body textile">
+        {{ article.content }}
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
